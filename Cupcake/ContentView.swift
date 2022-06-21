@@ -8,31 +8,30 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var username = ""
+    @State private var email = ""
+    
     @State private var results = [Result]()
 
     var body: some View {
-        List(results, id: \.trackId) { item in
-            HStack{
-                AsyncImage(url: URL(string: "https://hws.dev/img/logo.png")) { image in
-                    image
-                        .resizable()
-                        .scaledToFit()
-                } placeholder: {
-                    Color.red
+        NavigationView{
+            Form {
+                Section {
+                    TextField("Username", text: $username)
+                    TextField("Email", text: $email)
                 }
-                .frame(width: 40, height: 40)
-                
-                VStack(alignment: .leading) {
-                    Text(item.trackName)
-                        .font(.headline)
-                    Text(item.collectionName)
+
+                Section {
+                    Button("Create account") {
+                        print("Creating account…")
+                    }
                 }
+                .disabled(username.isEmpty || email.isEmpty)
+
             }
-            
+            .navigationTitle("Sign Up")
         }
-        .task {
-            await loadData()
-        }
+        
     }
     
     func loadData() async {
